@@ -1,6 +1,6 @@
 # ComfyUI-42lux-Hildegard-Refiner
 
-Tile-based refinement nodes for ComfyUI, built around the Hildegard-Refiner reference-latent scheme. Designed for FLUX.2 Klein but works with any model that accepts reference latents through attention patching.
+Tile-based refinement nodes for ComfyUI, built around the Hildegard-Refiner reference-latent scheme. Designed for FLUX.2 Klein.
 
 The pack is small and modular: three nodes that compose into a clean tile-refine pipeline. Tiling math is borrowed from [ComfyUI_Steudio](https://github.com/Steudio/ComfyUI_Steudio); the reference- latent construction (tile / position-map / global) is the actual Hildegard-Refiner contribution.
 
