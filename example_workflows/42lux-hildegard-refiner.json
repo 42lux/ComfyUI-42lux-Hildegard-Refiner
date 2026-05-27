@@ -1,0 +1,1365 @@
+{
+  "id": "6533a30c-717f-46b9-82dc-97d645228490",
+  "revision": 0,
+  "last_node_id": 27,
+  "last_link_id": 34,
+  "nodes": [
+    {
+      "id": 2,
+      "type": "KSamplerSelect",
+      "pos": [
+        1350.2182923652467,
+        682.592452274939
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "SAMPLER",
+          "type": "SAMPLER",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSamplerSelect"
+      },
+      "widgets_values": [
+        "euler"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "EmptyLatentImage",
+      "pos": [
+        1350.2182923652467,
+        830.9483972539999
+      ],
+      "size": [
+        270,
+        106
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 1
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        2048,
+        2048,
+        1
+      ]
+    },
+    {
+      "id": 4,
+      "type": "SamplerCustomAdvanced",
+      "pos": [
+        1670.2104293632274,
+        550.8264789606719
+      ],
+      "size": [
+        212.38333740234376,
+        326.00000000000006
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "noise",
+          "type": "NOISE",
+          "link": 3
+        },
+        {
+          "name": "guider",
+          "type": "GUIDER",
+          "link": 4
+        },
+        {
+          "name": "sampler",
+          "type": "SAMPLER",
+          "link": 5
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 6
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "LATENT",
+          "links": [
+            8
+          ]
+        },
+        {
+          "name": "denoised_output",
+          "type": "LATENT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SamplerCustomAdvanced"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 7,
+      "type": "BasicGuider",
+      "pos": [
+        1353.7937453265636,
+        530.742877796833
+      ],
+      "size": [
+        159.54999923706055,
+        46
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 11
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "GUIDER",
+          "type": "GUIDER",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicGuider"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 8,
+      "type": "ReferenceLatent",
+      "pos": [
+        1169.9614702368417,
+        574.1735593715314
+      ],
+      "size": [
+        204.0999984741211,
+        46
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 13
+        },
+        {
+          "name": "latent",
+          "shape": 7,
+          "type": "LATENT",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            12
+          ]
+        }
+      ],
+      "title": "global_latent",
+      "properties": {
+        "Node name for S&R": "ReferenceLatent"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 9,
+      "type": "ReferenceLatent",
+      "pos": [
+        859.9614702368422,
+        574.1735593715314
+      ],
+      "size": [
+        204.0999984741211,
+        46
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 15
+        },
+        {
+          "name": "latent",
+          "shape": 7,
+          "type": "LATENT",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            17
+          ]
+        }
+      ],
+      "title": "tile_latent",
+      "properties": {
+        "Node name for S&R": "ReferenceLatent"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 10,
+      "type": "ReferenceLatent",
+      "pos": [
+        989.9614702368417,
+        574.1735593715314
+      ],
+      "size": [
+        204.0999984741211,
+        46
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 17
+        },
+        {
+          "name": "latent",
+          "shape": 7,
+          "type": "LATENT",
+          "link": 18
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            13
+          ]
+        }
+      ],
+      "title": "position_latent",
+      "properties": {
+        "Node name for S&R": "ReferenceLatent"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 11,
+      "type": "RandomNoise",
+      "pos": [
+        1350.2182923652467,
+        373.88056231681765
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "NOISE",
+          "type": "NOISE",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "RandomNoise"
+      },
+      "widgets_values": [
+        209977622383955,
+        "fixed"
+      ]
+    },
+    {
+      "id": 14,
+      "type": "CLIPLoader",
+      "pos": [
+        539.9614702368422,
+        704.1735593715314
+      ],
+      "size": [
+        270,
+        106
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            25
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "qwen_3_8b.safetensors",
+        "flux2",
+        "default"
+      ]
+    },
+    {
+      "id": 15,
+      "type": "VAELoader",
+      "pos": [
+        539.9614702368422,
+        594.1735593715314
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            9,
+            24
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "fl2vae.safetensors"
+      ]
+    },
+    {
+      "id": 16,
+      "type": "Hildegard References Split",
+      "pos": [
+        852.749239128018,
+        201.7027989847665
+      ],
+      "size": [
+        277.91696660637365,
+        289.94903599236255
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 22
+        },
+        {
+          "name": "dac_data",
+          "type": "HILDEGARD_DATA",
+          "link": 23
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 24
+        }
+      ],
+      "outputs": [
+        {
+          "name": "TILE(S)",
+          "shape": 6,
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "name": "tile_latent",
+          "shape": 6,
+          "type": "LATENT",
+          "links": [
+            16
+          ]
+        },
+        {
+          "name": "position_latent",
+          "shape": 6,
+          "type": "LATENT",
+          "links": [
+            18
+          ]
+        },
+        {
+          "name": "global_latent",
+          "type": "LATENT",
+          "links": [
+            14
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Hildegard References Split"
+      },
+      "widgets_values": [
+        0,
+        512,
+        768
+      ]
+    },
+    {
+      "id": 18,
+      "type": "UNETLoader",
+      "pos": [
+        539.9614702368422,
+        914.1735593715314
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            26
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "flux-2-klein-9b-fp8.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 20,
+      "type": "Flux2KleinRefLatentWeight",
+      "pos": [
+        861.153287890615,
+        1108.1017881857604
+      ],
+      "size": [
+        306.43334045410154,
+        82
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 27
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "title": "global_latent_weight",
+      "properties": {
+        "Node name for S&R": "Flux2KleinRefLatentWeight"
+      },
+      "widgets_values": [
+        2,
+        0.8
+      ]
+    },
+    {
+      "id": 21,
+      "type": "Flux2KleinRefLatentWeight",
+      "pos": [
+        857.5778349292973,
+        1058.2144711026683
+      ],
+      "size": [
+        306.43334045410154,
+        82
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 28
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            27
+          ]
+        }
+      ],
+      "title": "position_latent_weight",
+      "properties": {
+        "Node name for S&R": "Flux2KleinRefLatentWeight"
+      },
+      "widgets_values": [
+        1,
+        0.8
+      ]
+    },
+    {
+      "id": 26,
+      "type": "Flux2Scheduler",
+      "pos": [
+        1350.2182923652467,
+        1027.3043422330609
+      ],
+      "size": [
+        270,
+        106
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 33
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 34
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Flux2Scheduler"
+      },
+      "widgets_values": [
+        8,
+        2048,
+        2048
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 25,
+      "type": "PrimitiveInt",
+      "pos": [
+        155.76403258076277,
+        591.2989192947032
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            1,
+            31,
+            33
+          ]
+        }
+      ],
+      "title": "tile_width",
+      "properties": {
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+        2048,
+        "fixed"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 24,
+      "type": "PrimitiveInt",
+      "pos": [
+        154.89682005067334,
+        724.3170377474294
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            2,
+            32,
+            34
+          ]
+        }
+      ],
+      "title": "tile_height",
+      "properties": {
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+        2048,
+        "fixed"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 23,
+      "type": "Hildegard Plan",
+      "pos": [
+        532.0874858869083,
+        201.7027989847665
+      ],
+      "size": [
+        283.10999419150005,
+        336.25084783763515
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 30
+        },
+        {
+          "name": "tile_width",
+          "type": "INT",
+          "widget": {
+            "name": "tile_width"
+          },
+          "link": 31
+        },
+        {
+          "name": "tile_height",
+          "type": "INT",
+          "widget": {
+            "name": "tile_height"
+          },
+          "link": 32
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            22
+          ]
+        },
+        {
+          "name": "dac_data",
+          "type": "HILDEGARD_DATA",
+          "links": [
+            21,
+            23
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Hildegard Plan"
+      },
+      "widgets_values": [
+        1536,
+        1536,
+        "1/4 Tile",
+        1.5,
+        "spiral",
+        "lanczos"
+      ]
+    },
+    {
+      "id": 13,
+      "type": "Hildegard Combine",
+      "pos": [
+        2088.025054470024,
+        364.3881063080688
+      ],
+      "size": [
+        210,
+        116
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 20
+        },
+        {
+          "name": "dac_data",
+          "type": "HILDEGARD_DATA",
+          "link": 21
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            19
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Hildegard Combine"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 5,
+      "type": "VAEDecode",
+      "pos": [
+        1938.7487135961912,
+        364.1133428808422
+      ],
+      "size": [
+        140,
+        46
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 8
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            20
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 12,
+      "type": "SaveImage",
+      "pos": [
+        1931.5723367021087,
+        550.7771190664314
+      ],
+      "size": [
+        371.30450057068083,
+        693.0952670893143
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 19
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [
+        147.84078534964914,
+        201.70279898476667
+      ],
+      "size": [
+        282.83333587646484,
+        314
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            30
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 17,
+      "type": "CLIPTextEncode",
+      "pos": [
+        854.7287408519328,
+        624.8999182554855
+      ],
+      "size": [
+        457.2072473810904,
+        200
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 25
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            15
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "RFNTILE. refine and add detail to this upscaled tile. Restore the image quality and resolve it to a sharp, high-resolution result. Remove compression artifacts, banding, and noise, and clarify soft or blurred areas into crisp, clean edges and definition. Enrich existing textures and surfaces with fine, intricate, physically accurate detail, matching the existing grain, focus, and material properties of each surface. Keep in-focus areas crisp and sharp, keep softly blurred areas soft, and leave flat or evenly-toned areas clean and smooth. Recover detail only where detail is already present, and add no new objects, elements, or content — refine only what is already in the tile. Preserve the original lighting, colour, contrast, and composition exactly as shown. Produce a clean, photorealistic result faithful to the source."
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 19,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        539.9614702368422,
+        1064.1735593715318
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 26
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            29
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "42lux_hildegard-refiner.safetensors",
+        1
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 22,
+      "type": "Flux2KleinRefLatentWeight",
+      "pos": [
+        859.9614702368422,
+        914.1735593715314
+      ],
+      "size": [
+        210,
+        82
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 29
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            28
+          ]
+        }
+      ],
+      "title": "tile_latent (freedom)",
+      "properties": {
+        "Node name for S&R": "Flux2KleinRefLatentWeight"
+      },
+      "widgets_values": [
+        0,
+        0.9
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 27,
+      "type": "Note",
+      "pos": [
+        154.78885997212623,
+        861.6445197289859
+      ],
+      "size": [
+        353.44370708475003,
+        336.28500155640256
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "A basic workflow for the Hildegard Refiner.\n\nTile Sizes: 1024×1024 up to 2560×2560\n\ntile_latent (freedom): Controls how much creative latitude the model has to reinvent details. Values between 0.85–1.00 are the safe range.\n\nSteps: 4–12. Use higher values for greater refinement and sharpness on fine details. \n\nOtherwise the inference pipeline is your playground add a color anchor or even per tile prompting."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      1,
+      25,
+      0,
+      3,
+      0,
+      "INT"
+    ],
+    [
+      2,
+      24,
+      0,
+      3,
+      1,
+      "INT"
+    ],
+    [
+      3,
+      11,
+      0,
+      4,
+      0,
+      "NOISE"
+    ],
+    [
+      4,
+      7,
+      0,
+      4,
+      1,
+      "GUIDER"
+    ],
+    [
+      5,
+      2,
+      0,
+      4,
+      2,
+      "SAMPLER"
+    ],
+    [
+      6,
+      26,
+      0,
+      4,
+      3,
+      "SIGMAS"
+    ],
+    [
+      7,
+      3,
+      0,
+      4,
+      4,
+      "LATENT"
+    ],
+    [
+      8,
+      4,
+      0,
+      5,
+      0,
+      "LATENT"
+    ],
+    [
+      9,
+      15,
+      0,
+      5,
+      1,
+      "VAE"
+    ],
+    [
+      11,
+      20,
+      0,
+      7,
+      0,
+      "MODEL"
+    ],
+    [
+      12,
+      8,
+      0,
+      7,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      13,
+      10,
+      0,
+      8,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      14,
+      16,
+      3,
+      8,
+      1,
+      "LATENT"
+    ],
+    [
+      15,
+      17,
+      0,
+      9,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      16,
+      16,
+      1,
+      9,
+      1,
+      "LATENT"
+    ],
+    [
+      17,
+      9,
+      0,
+      10,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      18,
+      16,
+      2,
+      10,
+      1,
+      "LATENT"
+    ],
+    [
+      19,
+      13,
+      0,
+      12,
+      0,
+      "IMAGE"
+    ],
+    [
+      20,
+      5,
+      0,
+      13,
+      0,
+      "IMAGE"
+    ],
+    [
+      21,
+      23,
+      1,
+      13,
+      1,
+      "HILDEGARD_DATA"
+    ],
+    [
+      22,
+      23,
+      0,
+      16,
+      0,
+      "IMAGE"
+    ],
+    [
+      23,
+      23,
+      1,
+      16,
+      1,
+      "HILDEGARD_DATA"
+    ],
+    [
+      24,
+      15,
+      0,
+      16,
+      2,
+      "VAE"
+    ],
+    [
+      25,
+      14,
+      0,
+      17,
+      0,
+      "CLIP"
+    ],
+    [
+      26,
+      18,
+      0,
+      19,
+      0,
+      "MODEL"
+    ],
+    [
+      27,
+      21,
+      0,
+      20,
+      0,
+      "MODEL"
+    ],
+    [
+      28,
+      22,
+      0,
+      21,
+      0,
+      "MODEL"
+    ],
+    [
+      29,
+      19,
+      0,
+      22,
+      0,
+      "MODEL"
+    ],
+    [
+      30,
+      1,
+      0,
+      23,
+      0,
+      "IMAGE"
+    ],
+    [
+      31,
+      25,
+      0,
+      23,
+      1,
+      "INT"
+    ],
+    [
+      32,
+      24,
+      0,
+      23,
+      2,
+      "INT"
+    ],
+    [
+      33,
+      25,
+      0,
+      26,
+      0,
+      "INT"
+    ],
+    [
+      34,
+      24,
+      0,
+      26,
+      1,
+      "INT"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.7627768444385503,
+      "offset": [
+        495.0107076219233,
+        155.58886557846373
+      ]
+    },
+    "frontendVersion": "1.43.18"
+  },
+  "version": 0.4
+}
