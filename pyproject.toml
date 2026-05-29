@@ -1,7 +1,7 @@
 [project]
 name = "42lux-hildegard-refiner"
 description = "Tile-based refinement nodes for ComfyUI, built around the Hildegard-Refiner reference-latent scheme. Designed for FLUX.2 Klein."
-version = "1.0.0"
+version = "1.2.0"
 license = "GPL" 
 # classifiers = [
 #     # For OS-independent nodes (works on all operating systems)
