@@ -218,6 +218,14 @@ def _hildegard_compute_upscale(image, tile_width, tile_height, overlap, min_scal
     return upscaled_image, dac_data, info_text
 
 
+def _gaussian_blur_bhwc(image_bhwc, radius):
+    """Gaussian-blur a single-batch BHWC float tensor via PIL."""
+    arr = (image_bhwc[0].detach().clamp(0.0, 1.0) * 255.0).round().to(torch.uint8).cpu().numpy()
+    pil = Image.fromarray(arr, mode="RGB").filter(ImageFilter.GaussianBlur(radius=radius))
+    out = np.asarray(pil).astype(np.float32) / 255.0
+    return torch.from_numpy(out).unsqueeze(0).to(image_bhwc.dtype)
+
+
 class Hildegard_Combine(io.ComfyNode):
     @classmethod
     def define_schema(cls) -> io.Schema:
@@ -388,31 +396,81 @@ class Hildegard_References_Split(io.ComfyNode):
             display_name="Hildegard References Split",
             category="upscale/hildegard-refiner",
             description=(
-                "Split the upscaled image into tiles and build Hildegard "
-                "reference latents (tile crop / 3x3 position map / global "
-                "thumbnail) in one pass. tile 0 = all tiles, tile # = only that tile."
+                "Split the upscaled image into tiles and build the three Hildegard "
+                "reference latents in one pass:\n"
+                "  - tile_latent: VAE-encoded crop of each tile (with optional "
+                "high-frequency reduction so the model has room to invent texture)\n"
+                "  - position_latent: VAE-encoded 3x3 position map (current tile in "
+                "center, 8 neighbors around it, cyan corner brackets ring the center)\n"
+                "  - global_latent: VAE-encoded thumbnail of the whole upscaled image\n"
+                "tile 0 = all tiles (lists), tile # = only that tile."
             ),
             inputs=[
-                io.Image.Input("image"),
-                io.Custom("HILDEGARD_DATA").Input("dac_data"),
-                io.Vae.Input("vae"),
-                io.Int.Input("tile", default=0, min=0, step=1),
-                io.Int.Input("cell_size", default=512, min=64, max=2048, step=16,
-                             tooltip="Side length of each cell in the 3x3 position map."),
-                io.Int.Input("ctrl3_max_size", default=2048, min=256, max=8192, step=16,
-                             tooltip="Long-edge cap (px) for the global thumbnail."),
+                io.Image.Input(
+                    "image",
+                    tooltip="Upscaled IMAGE from Hildegard Plan."),
+                io.Custom("HILDEGARD_DATA").Input(
+                    "dac_data",
+                    tooltip="dac_data from Hildegard Plan. Carries the tile grid, "
+                            "overlaps, and ordering this node has to honor."),
+                io.Vae.Input(
+                    "vae",
+                    tooltip="VAE used to encode the three reference image types into "
+                            "latents. For FLUX.2 Klein, the Klein VAE."),
+                io.Int.Input(
+                    "tile", default=0, min=0, step=1,
+                    tooltip="0 = process all tiles in the grid (each output is a list "
+                            "of N entries). N >= 1 = process only that single tile "
+                            "(each output is a list of 1). Index follows the same "
+                            "linear/spiral ordering Hildegard Plan picked."),
+                io.Int.Input(
+                    "cell_size", default=512, min=64, max=2048, step=16,
+                    tooltip="Side length (px) of each cell in the 3x3 position map. "
+                            "The final position image is cell_size x 3 on each axis. "
+                            "Larger = more spatial context detail, larger position "
+                            "latent. 512 is the Hildegard training default."),
+                io.Int.Input(
+                    "ctrl3_max_size", default=2048, min=256, max=8192, step=16,
+                    tooltip="Long-edge cap (px) for the global thumbnail before VAE "
+                            "encoding. The whole upscaled image is downscaled so its "
+                            "longer edge fits this. 2048 is the Hildegard training "
+                            "default."),
+                io.Float.Input(
+                    "tile_high_freq_reduce", default=0.50, min=0.0, max=1.0, step=0.05,
+                    tooltip="Attenuate the tile reference's high-frequency band "
+                            "(micro-detail / edges / texture) before VAE-encoding. "
+                            "0 = full source detail preserved in the reference (tight "
+                            "fidelity, model has little room to add). 0.5 (default) = "
+                            "balanced: source's color and structure preserved, but "
+                            "model is free to synthesize fresh micro-detail. 1 = soft, "
+                            "low-contrast version with only broad shapes and color "
+                            "preserved.\n\n"
+                            "Only affects the tile_latent output. The TILE(S) image "
+                            "output, position_latent, and global_latent are untouched."),
+                io.Float.Input(
+                    "low_freq_radius", default=15.0, min=1.0, max=256.0, step=1.0,
+                    tooltip="Gaussian-blur radius (px) defining the cutoff between "
+                            "low and high frequencies for tile_high_freq_reduce. "
+                            "Larger = more of the source's detail is classified as "
+                            "'low frequency' and survives the reduce. Smaller = only "
+                            "the very-broadest shapes survive; the model regenerates "
+                            "everything else. 15 (default) is a good baseline for "
+                            "refinement passes — keeps composition and color stable "
+                            "while opening up fine texture for the model."),
             ],
             outputs=[
                 io.Image.Output(display_name="TILE(S)", is_output_list=True),
                 io.Latent.Output(display_name="tile_latent", is_output_list=True),
                 io.Latent.Output(display_name="position_latent", is_output_list=True),
                 io.Latent.Output(display_name="global_latent"),
+                io.Image.Output(display_name="POSITION(S)", is_output_list=True),
             ],
             hidden=[io.Hidden.unique_id],
         )
 
     @classmethod
-    def execute(cls, image, dac_data, vae, tile, cell_size, ctrl3_max_size) -> io.NodeOutput:
+    def execute(cls, image, dac_data, vae, tile, cell_size, ctrl3_max_size,
+                tile_high_freq_reduce=0.50, low_freq_radius=15.0) -> io.NodeOutput:
         tile_width = dac_data["tile_width"]
         tile_height = dac_data["tile_height"]
 
@@ -437,6 +495,7 @@ class Hildegard_References_Split(io.ComfyNode):
         tiles_out = []
         tile_latents = []
         position_latents = []
+        position_images = []
 
         for n, idx in enumerate(indices):
             x, y = tile_coords[idx]
@@ -444,13 +503,26 @@ class Hildegard_References_Split(io.ComfyNode):
 
             crop = image[:, y:y + tile_height, x:x + tile_width, :].contiguous()
             tiles_out.append(crop)
-            tile_latents.append({"samples": vae.encode(crop)})
+
+            # Optionally attenuate the tile reference's high-frequency band.
+            # crop_for_latent = (1 − reduce) × crop + reduce × low
+            #   reduce = 0 → crop (unchanged)
+            #   reduce = 1 → fully blurred (only broad shapes / color survive)
+            if tile_high_freq_reduce > 0.0:
+                low = _gaussian_blur_bhwc(crop, low_freq_radius)
+                crop_for_latent = ((1.0 - tile_high_freq_reduce) * crop
+                                   + tile_high_freq_reduce * low).clamp(0.0, 1.0)
+            else:
+                crop_for_latent = crop
+            tile_latents.append({"samples": vae.encode(crop_for_latent)})
 
             pos_pil = _build_position_map(source_pil, x, y, tile_width, tile_height, cell_size)
-            position_latents.append({"samples": vae.encode(_pil_to_tensor(pos_pil))})
+            pos_tensor = _pil_to_tensor(pos_pil)
+            position_images.append(pos_tensor)
+            position_latents.append({"samples": vae.encode(pos_tensor)})
 
         result_tiles = [t[0].unsqueeze(0) if t.shape[0] == 1 else t for t in tiles_out]
-        return io.NodeOutput(result_tiles, tile_latents, position_latents, global_latent)
+        return io.NodeOutput(result_tiles, tile_latents, position_latents, global_latent, position_images)
 
 
 class HildegardExtension(ComfyExtension):
