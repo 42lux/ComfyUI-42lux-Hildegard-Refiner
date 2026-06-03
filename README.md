@@ -39,13 +39,36 @@ Load Image → Hildegard Plan → Hildegard References Split → [your sampler] 
    in an `overlap/4`-wide strip on every side that borders a neighbor; the mask is then Gaussian-blurred (or box-blurred at narrow overlaps). Result:
    smooth seams where tiles meet, hard edges at canvas borders.
 
-## Notes
+## Frequency separation on the tile reference
 
+`References Split` can attenuate the tile reference's high-frequency band before it's VAE-encoded into `tile_latent`. This lets you trade fidelity for creative headroom without touching the other reference slots.
 
+Two controls:
 
+- **`tile_high_freq_reduce`** (0.0 – 1.0, default `0.0`) — how much of the high-frequency band to subtract from the tile reference.
+  - `0.0` — full source detail preserved (tight fidelity, model has little room to add).
+  - `0.5` — balanced: source's color and structure preserved, but the model is free to synthesize fresh micro-detail.
+  - `1.0` — soft, low-contrast version with only broad shapes and color preserved.
+- **`low_freq_radius`** (1 – 256 px, default `256`) — Gaussian-blur radius defining the cutoff between low and high frequencies. Larger = more of the source's detail is classified as "low frequency" and survives the reduce; smaller = only the very-broadest shapes survive and the model regenerates everything else.
 
+Only `tile_latent` is affected. The `TILE(S)` image output, `position_latent`, and `global_latent` are untouched, so structure and global context stay locked while you open up texture for the model.
 
+Rule of thumb: raise `tile_high_freq_reduce` when the source is already noisy/over-sharpened and you want the model to re-synthesize clean detail; keep it at `0.0` when the source is clean and you want a faithful pass.
 
+## Iterative scaling
+
+Prefer several smaller passes over one big jump. Two or three passes at ~2× each consistently beat a single 4–8× pass: every step gives the model a cleaner reference to work from, drift stays bounded, and seams stay invisible because each tile only has to invent a modest amount of new detail. One big jump tends to hallucinate structure, exaggerate noise, and amplify any per-tile mistakes into something the next pass can't recover from.
+
+A practical recipe: pass 1 cleans and roughly doubles, pass 2 sharpens and doubles again, optional pass 3 only if you need extreme final resolution. Adjust `tile_high_freq_reduce` per pass — early passes can use `0.0` for fidelity, later passes can lift it slightly if the source detail starts to look stale relative to the new resolution.
+
+## `tile_weight` — resemblance vs. creativity
+
+In the example workflow, `tile_weight` controls how strongly the `tile_latent` reference pulls the sampler toward the source tile. It's the direct analogue of the **resemblance / creativity** slider on services like Magnific:
+
+- **Higher `tile_weight`** → more resemblance. The output sticks tightly to the source's structure, color, and detail. Safer, less drift, less added detail.
+- **Lower `tile_weight`** → more creativity. The model leans on the prompt and its own priors, inventing fresh detail. Bolder results, higher risk of structural drift or content the source never had.
+
+Pair it with `tile_high_freq_reduce`: low `tile_weight` + high `tile_high_freq_reduce` is the most permissive setting (model is free to reinvent micro-detail), high `tile_weight` + `0.0` reduce is the most faithful (lock to source).
 
 
 

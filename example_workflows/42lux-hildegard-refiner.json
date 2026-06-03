@@ -1,19 +1,19 @@
 {
   "id": "6533a30c-717f-46b9-82dc-97d645228490",
   "revision": 0,
-  "last_node_id": 27,
-  "last_link_id": 34,
+  "last_node_id": 35,
+  "last_link_id": 42,
   "nodes": [
     {
-      "id": 2,
-      "type": "KSamplerSelect",
+      "id": 14,
+      "type": "CLIPLoader",
       "pos": [
-        1350.2182923652467,
-        682.592452274939
+        539.9614702368422,
+        736.0636030969667
       ],
       "size": [
         270,
-        58
+        106
       ],
       "flags": {},
       "order": 0,
@@ -21,33 +21,477 @@
       "inputs": [],
       "outputs": [
         {
-          "name": "SAMPLER",
-          "type": "SAMPLER",
+          "name": "CLIP",
+          "type": "CLIP",
           "links": [
-            5
+            25
           ]
         }
       ],
       "properties": {
-        "Node name for S&R": "KSamplerSelect"
+        "Node name for S&R": "CLIPLoader"
       },
       "widgets_values": [
-        "euler"
+        "qwen_3_8b.safetensors",
+        "flux2",
+        "default"
       ]
     },
     {
-      "id": 3,
-      "type": "EmptyLatentImage",
+      "id": 15,
+      "type": "VAELoader",
+      "pos": [
+        539.9614702368422,
+        608.0086249596842
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            9,
+            24
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "fl2vae.safetensors"
+      ]
+    },
+    {
+      "id": 18,
+      "type": "UNETLoader",
+      "pos": [
+        539.9614702368422,
+        912.1185812342493
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            26
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "flux-2-klein-9b-fp8.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 25,
+      "type": "PrimitiveInt",
+      "pos": [
+        155.76403258076277,
+        576.3500392328398
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            1,
+            31,
+            33
+          ]
+        }
+      ],
+      "title": "tile_width",
+      "properties": {
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+        2048,
+        "fixed"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 24,
+      "type": "PrimitiveInt",
+      "pos": [
+        154.89682005067334,
+        718.9972794809129
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            2,
+            32,
+            34
+          ]
+        }
+      ],
+      "title": "tile_height",
+      "properties": {
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [
+        2048,
+        "fixed"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 19,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        539.9614702368422,
+        1064.1735593715318
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 26
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            29
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "42lux_hildegard-refiner.safetensors",
+        1
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 9,
+      "type": "ReferenceLatent",
+      "pos": [
+        859.9614702368422,
+        578.1065576289814
+      ],
+      "size": [
+        204.0999984741211,
+        46
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 15
+        },
+        {
+          "name": "latent",
+          "shape": 7,
+          "type": "LATENT",
+          "link": 35
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            17
+          ]
+        }
+      ],
+      "title": "tile_latent",
+      "properties": {
+        "Node name for S&R": "ReferenceLatent"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 10,
+      "type": "ReferenceLatent",
+      "pos": [
+        1017.5834690751419,
+        578.1065576289814
+      ],
+      "size": [
+        204.0999984741211,
+        46
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 17
+        },
+        {
+          "name": "latent",
+          "shape": 7,
+          "type": "LATENT",
+          "link": 36
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            13
+          ]
+        }
+      ],
+      "title": "position_latent",
+      "properties": {
+        "Node name for S&R": "ReferenceLatent"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 8,
+      "type": "ReferenceLatent",
+      "pos": [
+        1175.2054679134417,
+        578.1065576289814
+      ],
+      "size": [
+        204.0999984741211,
+        46
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 28,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 13
+        },
+        {
+          "name": "latent",
+          "shape": 7,
+          "type": "LATENT",
+          "link": 37
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            12
+          ]
+        }
+      ],
+      "title": "global_latent",
+      "properties": {
+        "Node name for S&R": "ReferenceLatent"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 26,
+      "type": "Flux2Scheduler",
       "pos": [
         1350.2182923652467,
-        830.9483972539999
+        1030.4125168778237
       ],
       "size": [
         270,
         106
       ],
       "flags": {},
-      "order": 11,
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 33
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 34
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Flux2Scheduler"
+      },
+      "widgets_values": [
+        4,
+        2048,
+        2048
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 17,
+      "type": "CLIPTextEncode",
+      "pos": [
+        854.7287408519328,
+        624.8999182554855
+      ],
+      "size": [
+        457.2072473810904,
+        200
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 25
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            15
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "RFNTILE. refine and add detail to this upscaled tile. Restore the image quality and resolve it to a sharp, high-resolution result. Remove compression artifacts, banding, and noise, and clarify soft or blurred areas into crisp, clean edges and definition. Enrich existing textures and surfaces with fine, intricate, physically accurate detail, matching the existing grain, focus, and material properties of each surface. Keep in-focus areas crisp and sharp, keep softly blurred areas soft, and leave flat or evenly-toned areas clean and smooth. Recover detail only where detail is already present, and add no new objects, elements, or content — refine only what is already in the tile. Preserve the original lighting, colour, contrast, and composition exactly as shown. Produce a clean, photorealistic result faithful to the source."
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 20,
+      "type": "Flux2KleinRefLatentWeight",
+      "pos": [
+        1140,
+        1420
+      ],
+      "size": [
+        306.43334045410154,
+        82
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 25,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 27
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            38
+          ]
+        }
+      ],
+      "title": "global_latent_weight",
+      "properties": {
+        "Node name for S&R": "Flux2KleinRefLatentWeight"
+      },
+      "widgets_values": [
+        2,
+        0.8
+      ]
+    },
+    {
+      "id": 3,
+      "type": "EmptyLatentImage",
+      "pos": [
+        1352.8402912035467,
+        871.9540111024969
+      ],
+      "size": [
+        270,
+        106
+      ],
+      "flags": {},
+      "order": 17,
       "mode": 0,
       "inputs": [
         {
@@ -86,18 +530,89 @@
       ]
     },
     {
+      "id": 2,
+      "type": "KSamplerSelect",
+      "pos": [
+        1352.8402912035467,
+        761.4955053271702
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "SAMPLER",
+          "type": "SAMPLER",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSamplerSelect"
+      },
+      "widgets_values": [
+        "euler"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "BasicGuider",
+      "pos": [
+        1356.4157441648636,
+        663.0369995518436
+      ],
+      "size": [
+        159.54999923706055,
+        46
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 39
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "GUIDER",
+          "type": "GUIDER",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicGuider"
+      },
+      "widgets_values": []
+    },
+    {
       "id": 4,
       "type": "SamplerCustomAdvanced",
       "pos": [
         1670.2104293632274,
-        550.8264789606719
+        528.5784937765169
       ],
       "size": [
         212.38333740234376,
         326.00000000000006
       ],
       "flags": {},
-      "order": 22,
+      "order": 30,
       "mode": 0,
       "inputs": [
         {
@@ -146,424 +661,143 @@
       "widgets_values": []
     },
     {
-      "id": 7,
-      "type": "BasicGuider",
+      "id": 13,
+      "type": "Hildegard Combine",
       "pos": [
-        1353.7937453265636,
-        530.742877796833
+        2080,
+        340
       ],
       "size": [
-        159.54999923706055,
-        46
+        210,
+        116
       ],
       "flags": {},
-      "order": 21,
+      "order": 32,
       "mode": 0,
       "inputs": [
         {
-          "name": "model",
-          "type": "MODEL",
-          "link": 11
-        },
-        {
-          "name": "conditioning",
-          "type": "CONDITIONING",
-          "link": 12
-        }
-      ],
-      "outputs": [
-        {
-          "name": "GUIDER",
-          "type": "GUIDER",
-          "links": [
-            4
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "BasicGuider"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 8,
-      "type": "ReferenceLatent",
-      "pos": [
-        1169.9614702368417,
-        574.1735593715314
-      ],
-      "size": [
-        204.0999984741211,
-        46
-      ],
-      "flags": {
-        "collapsed": true
-      },
-      "order": 20,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "conditioning",
-          "type": "CONDITIONING",
-          "link": 13
-        },
-        {
-          "name": "latent",
-          "shape": 7,
-          "type": "LATENT",
-          "link": 14
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            12
-          ]
-        }
-      ],
-      "title": "global_latent",
-      "properties": {
-        "Node name for S&R": "ReferenceLatent"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 9,
-      "type": "ReferenceLatent",
-      "pos": [
-        859.9614702368422,
-        574.1735593715314
-      ],
-      "size": [
-        204.0999984741211,
-        46
-      ],
-      "flags": {
-        "collapsed": true
-      },
-      "order": 17,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "conditioning",
-          "type": "CONDITIONING",
-          "link": 15
-        },
-        {
-          "name": "latent",
-          "shape": 7,
-          "type": "LATENT",
-          "link": 16
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            17
-          ]
-        }
-      ],
-      "title": "tile_latent",
-      "properties": {
-        "Node name for S&R": "ReferenceLatent"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 10,
-      "type": "ReferenceLatent",
-      "pos": [
-        989.9614702368417,
-        574.1735593715314
-      ],
-      "size": [
-        204.0999984741211,
-        46
-      ],
-      "flags": {
-        "collapsed": true
-      },
-      "order": 19,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "conditioning",
-          "type": "CONDITIONING",
-          "link": 17
-        },
-        {
-          "name": "latent",
-          "shape": 7,
-          "type": "LATENT",
-          "link": 18
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            13
-          ]
-        }
-      ],
-      "title": "position_latent",
-      "properties": {
-        "Node name for S&R": "ReferenceLatent"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 11,
-      "type": "RandomNoise",
-      "pos": [
-        1350.2182923652467,
-        373.88056231681765
-      ],
-      "size": [
-        270,
-        82
-      ],
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "NOISE",
-          "type": "NOISE",
-          "links": [
-            3
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "RandomNoise"
-      },
-      "widgets_values": [
-        209977622383955,
-        "fixed"
-      ]
-    },
-    {
-      "id": 14,
-      "type": "CLIPLoader",
-      "pos": [
-        539.9614702368422,
-        704.1735593715314
-      ],
-      "size": [
-        270,
-        106
-      ],
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            25
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPLoader"
-      },
-      "widgets_values": [
-        "qwen_3_8b.safetensors",
-        "flux2",
-        "default"
-      ]
-    },
-    {
-      "id": 15,
-      "type": "VAELoader",
-      "pos": [
-        539.9614702368422,
-        594.1735593715314
-      ],
-      "size": [
-        270,
-        58
-      ],
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [
-            9,
-            24
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VAELoader"
-      },
-      "widgets_values": [
-        "fl2vae.safetensors"
-      ]
-    },
-    {
-      "id": 16,
-      "type": "Hildegard References Split",
-      "pos": [
-        852.749239128018,
-        201.7027989847665
-      ],
-      "size": [
-        277.91696660637365,
-        289.94903599236255
-      ],
-      "flags": {},
-      "order": 15,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "image",
+          "name": "images",
           "type": "IMAGE",
-          "link": 22
+          "link": 20
         },
         {
           "name": "dac_data",
           "type": "HILDEGARD_DATA",
-          "link": 23
+          "link": 21
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            19
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Hildegard Combine"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 5,
+      "type": "VAEDecode",
+      "pos": [
+        1918.6954994293192,
+        340
+      ],
+      "size": [
+        140,
+        46
+      ],
+      "flags": {},
+      "order": 31,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 8
         },
         {
           "name": "vae",
           "type": "VAE",
-          "link": 24
+          "link": 9
         }
       ],
       "outputs": [
         {
-          "name": "TILE(S)",
-          "shape": 6,
+          "name": "IMAGE",
           "type": "IMAGE",
-          "links": null
-        },
-        {
-          "name": "tile_latent",
-          "shape": 6,
-          "type": "LATENT",
           "links": [
-            16
-          ]
-        },
-        {
-          "name": "position_latent",
-          "shape": 6,
-          "type": "LATENT",
-          "links": [
-            18
-          ]
-        },
-        {
-          "name": "global_latent",
-          "type": "LATENT",
-          "links": [
-            14
+            20
           ]
         }
       ],
       "properties": {
-        "Node name for S&R": "Hildegard References Split"
+        "Node name for S&R": "VAEDecode"
       },
-      "widgets_values": [
-        0,
-        512,
-        768
-      ]
+      "widgets_values": []
     },
     {
-      "id": 18,
-      "type": "UNETLoader",
+      "id": 12,
+      "type": "SaveImage",
       "pos": [
-        539.9614702368422,
-        914.1735593715314
+        1918.6954994293192,
+        528.5784937765169
       ],
       "size": [
-        270,
-        82
+        371.30450057068083,
+        693.0952670893143
       ],
       "flags": {},
-      "order": 4,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            26
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "UNETLoader"
-      },
-      "widgets_values": [
-        "flux-2-klein-9b-fp8.safetensors",
-        "default"
-      ]
-    },
-    {
-      "id": 20,
-      "type": "Flux2KleinRefLatentWeight",
-      "pos": [
-        861.153287890615,
-        1108.1017881857604
-      ],
-      "size": [
-        306.43334045410154,
-        82
-      ],
-      "flags": {
-        "collapsed": true
-      },
-      "order": 18,
+      "order": 33,
       "mode": 0,
       "inputs": [
         {
-          "name": "model",
-          "type": "MODEL",
-          "link": 27
+          "name": "images",
+          "type": "IMAGE",
+          "link": 19
         }
       ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            11
-          ]
-        }
-      ],
-      "title": "global_latent_weight",
+      "outputs": [],
       "properties": {
-        "Node name for S&R": "Flux2KleinRefLatentWeight"
+        "Node name for S&R": "SaveImage"
       },
       "widgets_values": [
-        2,
-        0.8
+        "ComfyUI"
       ]
+    },
+    {
+      "id": 31,
+      "type": "Note",
+      "pos": [
+        870,
+        1490
+      ],
+      "size": [
+        210,
+        88
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "Lower values give higher creativity but can lower resemblance."
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
     },
     {
       "id": 21,
       "type": "Flux2KleinRefLatentWeight",
       "pos": [
-        857.5778349292973,
-        1058.2144711026683
+        1130,
+        1370
       ],
       "size": [
         306.43334045410154,
@@ -572,7 +806,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 16,
+      "order": 22,
       "mode": 0,
       "inputs": [
         {
@@ -600,127 +834,42 @@
       ]
     },
     {
-      "id": 26,
-      "type": "Flux2Scheduler",
+      "id": 22,
+      "type": "Flux2KleinRefLatentWeight",
       "pos": [
-        1350.2182923652467,
-        1027.3043422330609
+        870,
+        1370
       ],
       "size": [
-        270,
-        106
+        210,
+        82
       ],
       "flags": {},
-      "order": 12,
+      "order": 20,
       "mode": 0,
       "inputs": [
         {
-          "name": "width",
-          "type": "INT",
-          "widget": {
-            "name": "width"
-          },
-          "link": 33
-        },
-        {
-          "name": "height",
-          "type": "INT",
-          "widget": {
-            "name": "height"
-          },
-          "link": 34
+          "name": "model",
+          "type": "MODEL",
+          "link": 29
         }
       ],
       "outputs": [
         {
-          "name": "SIGMAS",
-          "type": "SIGMAS",
+          "name": "MODEL",
+          "type": "MODEL",
           "links": [
-            6
+            28
           ]
         }
       ],
+      "title": "tile_latent (freedom)",
       "properties": {
-        "Node name for S&R": "Flux2Scheduler"
+        "Node name for S&R": "Flux2KleinRefLatentWeight"
       },
       "widgets_values": [
-        8,
-        2048,
-        2048
-      ],
-      "color": "#232",
-      "bgcolor": "#353"
-    },
-    {
-      "id": 25,
-      "type": "PrimitiveInt",
-      "pos": [
-        155.76403258076277,
-        591.2989192947032
-      ],
-      "size": [
-        270,
-        82
-      ],
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "INT",
-          "type": "INT",
-          "links": [
-            1,
-            31,
-            33
-          ]
-        }
-      ],
-      "title": "tile_width",
-      "properties": {
-        "Node name for S&R": "PrimitiveInt"
-      },
-      "widgets_values": [
-        2048,
-        "fixed"
-      ],
-      "color": "#232",
-      "bgcolor": "#353"
-    },
-    {
-      "id": 24,
-      "type": "PrimitiveInt",
-      "pos": [
-        154.89682005067334,
-        724.3170377474294
-      ],
-      "size": [
-        270,
-        82
-      ],
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "INT",
-          "type": "INT",
-          "links": [
-            2,
-            32,
-            34
-          ]
-        }
-      ],
-      "title": "tile_height",
-      "properties": {
-        "Node name for S&R": "PrimitiveInt"
-      },
-      "widgets_values": [
-        2048,
-        "fixed"
+        0,
+        0.9
       ],
       "color": "#232",
       "bgcolor": "#353"
@@ -737,7 +886,7 @@
         336.25084783763515
       ],
       "flags": {},
-      "order": 13,
+      "order": 19,
       "mode": 0,
       "inputs": [
         {
@@ -786,133 +935,384 @@
         1536,
         1536,
         "1/4 Tile",
-        1.5,
+        1.3,
         "spiral",
         "lanczos"
       ]
     },
     {
-      "id": 13,
-      "type": "Hildegard Combine",
+      "id": 16,
+      "type": "Hildegard References Split",
       "pos": [
-        2088.025054470024,
-        364.3881063080688
+        852.749239128018,
+        201.7027989847665
       ],
       "size": [
-        210,
-        116
+        277.91696660637365,
+        289.94903599236255
       ],
       "flags": {},
-      "order": 24,
+      "order": 21,
       "mode": 0,
       "inputs": [
         {
-          "name": "images",
+          "name": "image",
           "type": "IMAGE",
-          "link": 20
+          "link": 22
         },
         {
           "name": "dac_data",
           "type": "HILDEGARD_DATA",
-          "link": 21
-        }
-      ],
-      "outputs": [
-        {
-          "name": "image",
-          "type": "IMAGE",
-          "links": [
-            19
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Hildegard Combine"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 5,
-      "type": "VAEDecode",
-      "pos": [
-        1938.7487135961912,
-        364.1133428808422
-      ],
-      "size": [
-        140,
-        46
-      ],
-      "flags": {},
-      "order": 23,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "samples",
-          "type": "LATENT",
-          "link": 8
+          "link": 23
         },
         {
           "name": "vae",
           "type": "VAE",
-          "link": 9
+          "link": 24
         }
       ],
       "outputs": [
         {
-          "name": "IMAGE",
+          "name": "TILE(S)",
+          "shape": 6,
           "type": "IMAGE",
           "links": [
-            20
+            40
+          ]
+        },
+        {
+          "name": "POSITION(S)",
+          "shape": 6,
+          "type": "IMAGE",
+          "links": [
+            41
+          ]
+        },
+        {
+          "name": "tile_latent",
+          "shape": 6,
+          "type": "LATENT",
+          "links": [
+            35
+          ]
+        },
+        {
+          "name": "position_latent",
+          "shape": 6,
+          "type": "LATENT",
+          "links": [
+            36
+          ]
+        },
+        {
+          "name": "global_latent",
+          "type": "LATENT",
+          "links": [
+            37
           ]
         }
       ],
       "properties": {
-        "Node name for S&R": "VAEDecode"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 12,
-      "type": "SaveImage",
-      "pos": [
-        1931.5723367021087,
-        550.7771190664314
-      ],
-      "size": [
-        371.30450057068083,
-        693.0952670893143
-      ],
-      "flags": {},
-      "order": 25,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 19
-        }
-      ],
-      "outputs": [],
-      "properties": {
-        "Node name for S&R": "SaveImage"
+        "Node name for S&R": "Hildegard References Split"
       },
       "widgets_values": [
-        "ComfyUI"
+        0,
+        512,
+        768,
+        0,
+        256
       ]
+    },
+    {
+      "id": 33,
+      "type": "Note",
+      "pos": [
+        541.8549611185338,
+        1190.6193806913768
+      ],
+      "size": [
+        269.53974425915055,
+        88
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "If you need more creativity you can lower the LoRa strength but you might see seams. A good way to counter act is to activate the color anchor."
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 34,
+      "type": "Note",
+      "pos": [
+        544.4769599568335,
+        50.049886030883314
+      ],
+      "size": [
+        269.53974425915055,
+        88
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "My suggestion is to do 2 or 3 repeated lower upscale passes instead of one big one. Going for 2x should be safe though."
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 35,
+      "type": "Note",
+      "pos": [
+        855.1838222953818,
+        52.671884869183714
+      ],
+      "size": [
+        269.53974425915055,
+        88
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "If you come from a model with high frequency artifacts like nano or gpt image you can get rid of them with the high_freq_reduce and low_freq_radius. There is some explanation in the readme file."
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 32,
+      "type": "Note",
+      "pos": [
+        860,
+        1220
+      ],
+      "size": [
+        451.04560359957077,
+        88
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "You can use it with the standard prompt but I suggest you use one of the llm prompt template with an llm. You can use claude like I do or qwen 9B locally which I had also good results with. There are llm prompting templates in the custom node folder."
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 30,
+      "type": "Note",
+      "pos": [
+        1349.6824652578182,
+        1406.9551110770901
+      ],
+      "size": [
+        270.16869446201304,
+        113.32287098584891
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "If you see color drifts between tiles you can activate the color anchoring node."
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 28,
+      "type": "Flux2KleinColorAnchor",
+      "pos": [
+        1347.6917839237976,
+        1188.8710226531502
+      ],
+      "size": [
+        276.5833343505859,
+        174
+      ],
+      "flags": {},
+      "order": 27,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 38
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            39
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Flux2KleinColorAnchor"
+      },
+      "widgets_values": [
+        0.5,
+        1.5,
+        0,
+        "uniform",
+        false
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 27,
+      "type": "Note",
+      "pos": [
+        153.47786055297624,
+        844.6015272800361
+      ],
+      "size": [
+        269.53974425915055,
+        88
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "A basic workflow for the Hildegard Refiner.\n\nTile Sizes: 1024×1024 up to 3048×3048"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 11,
+      "type": "RandomNoise",
+      "pos": [
+        1354.1512906226967,
+        528.5784937765169
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "NOISE",
+          "type": "NOISE",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "RandomNoise"
+      },
+      "widgets_values": [
+        209977622383955,
+        "randomize"
+      ]
+    },
+    {
+      "id": 29,
+      "type": "ClaudeNode",
+      "pos": [
+        860,
+        880
+      ],
+      "size": [
+        455.06197560429973,
+        302
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 4,
+      "inputs": [
+        {
+          "label": "image_1",
+          "name": "images.image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 40
+        },
+        {
+          "label": "image_2",
+          "name": "images.image_2",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 41
+        },
+        {
+          "label": "image_3",
+          "name": "images.image_3",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ClaudeNode"
+      },
+      "widgets_values": [
+        "",
+        "Opus 4.7",
+        16000,
+        1,
+        0,
+        "randomize",
+        "Assemble in this order. Fixed blocks are verbatim; semi-fixed take a small\nslot; variable blocks are per-image.\n\n| #    | Block                                   | Type       | Include when                                   |\n| ---- | --------------------------------------- | ---------- | ---------------------------------------------- |\n| 0    | Reference handling                      | Fixed*     | Always — *single-reference uses the short form |\n| 1    | Master framing                          | Fixed      | Always                                         |\n| 2    | Focal subject — person / object / scene | Semi-fixed | Always — pick the matching mode                |\n| 3    | Hair                                    | Semi-fixed | Person mode, visible hair                      |\n| 4    | Special materials                       | Variable   | Always — core slot                             |\n| 5    | Fine-detail elements                    | Variable   | Always                                         |\n| 6    | Environment / background                | Variable   | There is a background                          |\n| 7    | Lighting & grade preservation           | Semi-fixed | Always                                         |\n| 8    | Source clean-up                         | Fixed      | Always                                         |\n| 9    | Scope lock                              | Fixed      | Always                                         |\n| 10   | Style / Mood tag                        | Optional   | Painterly/illustrated, or aesthetic drift      |\n\nBlocks 0 and 1 are written as one continuous opening; the trigger phrase\nbegins it.\n\n---\n\n## Block-by-block\n\n### 0 + 1. Trigger, reference handling & master framing — FIXED\n\nEvery prompt opens with the full LoRA trigger phrase verbatim — never reword.\n\n**Multi-reference pipeline** (tile passed alongside context slots):\n\n> RFNTILE. refine and add detail to this upscaled tile. Image 1 is the tile to refine — resolve fine detail and crisp, clean edges across image 1 only, as a high-resolution delivery master of {SCENE}. Image 2 shows where this tile sits within the full frame; image 3 is the full source photo — draw on images 2 and 3 only for matching colour, lighting, and edge continuity, keeping all rendered content sourced from image 1.\n\n**Single-reference pipeline** (only the tile is passed):\n\n> RFNTILE. refine and add detail to this upscaled tile. Finish this image as a high-resolution delivery master. Resolve fine detail and crisp, clean edges throughout {SCENE}.\n\n`{SCENE}` is a 1–3 word noun phrase: `this portrait`, `this image`, `this\nfantasy scene`. With the multi-reference form, the scope lock (block 9) must\nalso pin to \"image 1\".\n\n> **Pending validation:** the multi-reference slot order is assumed to be\n> tile = image 1, position-map = image 2, full photo = image 3. Confirm\n> against the pipeline before relying on it; if the order differs, update the\n> image indices throughout.\n\n### 2. Focal subject — SEMI-FIXED\n\nThree modes. Pick one, or combine.\n\n**Person mode** — a person or face is the subject.\n**Object mode** — a product, vehicle, animal, creature, or hero object is the subject.\n**Scene / no-hero mode** — a wide or dense scene with no single subject.\n\nModes can combine. An android with a porcelain body uses person mode for the\nface and object mode for the body. A headless cropped figure (legs in a\nproduct shot) uses object mode and carries only the person-mode skin clause.\nWhen in doubt, derive a preset (see \"Fallback\" below) rather than force-fit.\n\n#### Person mode — skin & eyes\n\nPick the skin variant that matches the observed surface. The skin clause\nfollows what the image actually shows, not a default — see writing rule 7.\n\n**Young adult, normal portrait light:**\n\n> Render the skin with a realistic matte finish and lifelike, pore-level texture — keep visible pores, fine skin detail, freckles, and natural soft highlights, so the skin reads as real, textured, and matte.\n\n**Older subject:**\n\n> Render the skin with a realistic matte finish and lifelike, pore-level texture — keep the wrinkles, crow's-feet, skin pigmentation, and full age character, so the face keeps its real, lived-in detail.\n\n**Child:**\n\n> Render the skin with a soft, natural matte finish appropriate to a young child — keep the skin smooth, soft, and lifelike with realistic fine detail.\n\n**Macro / sweat / oil / strong directional light** (override the matte default):\n\n> Render the skin with realistic pore-level texture and its natural sheen — keep the visible pores, fine skin detail, and the existing wet/oily highlights as part of the source.\n\n**Non-human creature** (orc, monster, fantasy being):\n\n> Render the {creature's} skin/hide with a realistic matte finish and weathered, pore-level texture — keep the deep wrinkles, coarse leathery surface, painted markings, scars, and blemishes, so the face keeps its real, lived-in character.\n\nThen the eyes (all variants):\n\n> Resolve the eyes with sharp, lifelike clarity — crisp irises, clean specular catchlights, and individual eyelashes.\n\n#### Object mode — focal object\n\nGive the focal object a priority sentence naming its primary surfaces, then\nresolve key materials in detail.\n\n> Resolve the {OBJECT} as the sharp focal subject — render {PRIMARY SURFACES} with crisp form, clean edges, and accurate detail true to the source.\n\nExamples: *Vehicle* — \"render the body panels, glass, headlights, grille, and\nwheels...\"; *Product* — \"render its form, surface material, cap, and\nlabel...\"; *Animal* — \"render the coat, eyes, nose, and facial detail with\ncrisp, lifelike clarity.\"\n\n#### Scene / no-hero mode\n\nFor wide or crowd scenes with no dominant subject:\n\n> Treat this as a layered scene with no single subject — resolve each depth layer at the clarity it already holds, recovering detail that is present rather than inventing new content.\n\nFor crowds or repeated figures: \"each figure kept separate, holding only the\ndetail the source supports.\" See \"Known limitations\" — dense crowds have a\nhard ceiling.\n\n### 3. Hair — SEMI-FIXED — person mode only\n\n> Resolve the hair as fine, individual strands{HAIR_DETAIL}, with soft, defined flyaways.\n\n`{HAIR_DETAIL}` adds source notes: `, the defined curls`, `, the silver-grey\nand dark hairs`, `, the windblown wisps`. Drop the block if hair is not visible.\n\n### 4. Special materials — VARIABLE (core slot)\n\nOne sentence per high-risk material. Name the surface and its sub-features,\nthen add the positive guard (the desired state):\n\n> On the {MATERIAL}, resolve {SUB-FEATURES} as crisp, well-defined detail, {GUARD}.\n\nPull phrasing from the vocabulary bank below. List materials foreground-first.\n\n### 5. Fine-detail elements — VARIABLE\n\nSmall high-frequency elements — sparkles, particles, beadwork, light glints,\nflyaway strands. One short positive clause each (\"as clean, sharp points of\nlight\", \"each one separate with its own defined edge\").\n\n### 6. Environment / background — VARIABLE\n\n> Keep the {BACKGROUND} naturally detailed within its existing {depth of field / atmospheric depth}, holding the {bokeh / haze / glints} as {smooth, soft, intact}.\n\nSoft-gradient elements (sky, haze, aurora, cast shadows) are also named in\nblock 8.\n\n### 7. Lighting & grade preservation — SEMI-FIXED\n\n> Maintain the {LIGHTING} and the {GRADE} colour grade, with the existing contrast, white balance, framing, and depth of field exactly as shown.\n\nDescribe the lighting concretely — source, quality, direction, temperature\n(`warm, soft directional interior light`, `dramatic low-key chiaroscuro`,\n`hard direct on-camera flash`). `{GRADE}` is a short descriptor: `muted\ndesaturated`, `deep cosmic`, `warm sunlit`.\n\n### 8. Source clean-up — FIXED\n\n> Clean up degradation from the source: suppress compression artifacts, colour banding, and aliasing, and render smooth, even tonal gradients and clean, clear shadow detail.\n\nAdd `luminance noise` to the list for real photographs (camera sensor noise),\nespecially underexposed or flash-lit shots. For film-look images,\npreserve the grain explicitly: \"while preserving the natural film grain as\npart of the look.\"\n\n### 9. Scope lock — FIXED\n\n> Keep the content, composition, framing, colours, and style identical to the source image — change only resolution, sharpness, and fine detail.\n\nIn the multi-reference form, pin to \"identical to image 1\" instead of \"the\nsource image\". Always the final sentence before the optional tag.\n\n### 10. Style / Mood tag — OPTIONAL\n\n> Style: {medium}. Mood: {existing mood}.\n\nUse whenever the source is painterly/illustrated, or whenever the upscale\ndrifts. Example: `Style: digital concept art. Mood: cold, cinematic.`\n\n---\n\n## Material vocabulary bank\n\nSub-features and positive guards per material type.\n\n| Material                             | Sub-features to name                                         | Guard                                                        |\n| ------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |\n| Polished metal                       | specular highlights, mirror reflections, scratches, rivets, hinges, seams | reflections accurate and true to the source                  |\n| Aged / weathered metal               | worn patina, cracked finish, tarnish, scratches              | aged, weathered character intact                             |\n| Translucent glass                    | refraction, internal caustics, surface highlights, content within | clean, clear, and fully transparent                          |\n| Sheer fabric                         | layered weave, chiffon/tulle, beadwork, panel translucency   | each layer crisp and individually defined                    |\n| Lace / fine openwork fabric          | floral lace pattern, mesh ground, scalloped edges, skin visible through the weave | pattern faithful to the source, skin visible through the open weave |\n| Feathers                             | barbs, downy texture, flyaway strands                        | each barb a separate, cleanly defined strand                 |\n| Short animal fur                     | individual hairs, directional flow, natural clumping         | fine, distinct hairs with natural flow and clumping          |\n| Reptilian / scaled hide              | overlapping scales, scale texture, edges                     | crisp, distinct overlapping scales                           |\n| Antlers / bone                       | velvet and bone texture, tine tips                           | crisp surface texture with sharp tips                        |\n| Carved stone                         | relief, scrollwork, patina, lichen                           | sharp, deep-cut geometric detail                             |\n| Foliage / ground                     | moss, bark, growth rings, rock, soil                         | each surface its own distinct texture                        |\n| Sparkles / particles                 | points of light                                              | clean, sharp, well-defined points of light                   |\n| Bokeh discs                          | smooth defocused circles                                     | smooth discs, evenly filled, with soft edges                 |\n| Lips                                 | natural lip texture, soft sheen                              | natural texture with controlled, realistic sheen             |\n| Tattoos / body art                   | linework, shading, colour of the artwork                     | faithful to the source as drawn, not redrawn                 |\n| Glitter makeup                       | sparkle points across the skin                               | clean, distinct points of light over matte skin              |\n| Painted nails                        | smooth nail surface, polish colour                           | clean, smooth, defined surfaces                              |\n| Automotive paint                     | metallic flake, specular rolloff, panel reflections          | reflections clean and true to the source                     |\n| Glossy spheres / clustered objects   | each object, single clean highlight                          | each object separate with its own defined edge               |\n| Printed text / labels                | letterforms, layout, logo marks                              | reproduce the existing lettering exactly (see Limitations)   |\n| Matte plastic                        | moulded form, fine surface grain, panel seams                | even matte surface with crisp moulded edges                  |\n| Glossy plastic                       | smooth shell, highlights, moulded detail                     | clean even gloss with sharp moulded edges                    |\n| Brushed / chrome metal               | brushed grain or mirror finish, edge highlights              | accurate finish true to the source                           |\n| Rubber / tyres                       | moulded surface, tread pattern, sidewall texture             | defined detail and even matte rubber surface                 |\n| Liquid / fluid                       | surface highlights, translucency, meniscus, bubbles          | clean, translucent, with crisp surface detail                |\n| Water surface / caustics             | ripples, refraction, caustic light patterns                  | crisp, clean detail held as source content                   |\n| Air bubbles                          | rounded bubble shapes, highlights                            | clean, well-defined rounded shapes                           |\n| Screens / displays                   | pixels, UI elements, emitted glow                            | crisp display content with even emitted light                |\n| Paper / packaging                    | fibre texture, print, folds and creases, embossing           | crisp print and clean material texture                       |\n| Translucent / backlit organic        | subsurface glow, veining, colour gradients                   | luminous translucency, smooth clean gradients                |\n| Regular tiled patterns               | tile grid, straight edges, joints                            | clean, straight tile edges                                   |\n| Candle / small flame                 | flame shape, emitted glow                                    | clean, even flames with soft, intact glow                    |\n| Patterned silk / printed fabric      | woven sheen, fabric folds, the print                         | pattern faithful to the source, weave intact                 |\n| Velvet / matte fabric                | directional nap, soft surface                                | soft matte nap, no false sheen                               |\n| Lens distortion / optical aberration | barrel curvature, warped reflections, soft aberration        | preserved exactly as in the source                           |\n\nNote: matte as a *material description* (rubber, matte plastic, velvet) is\nfine in block 4 — distinct from rule 7, which only restricts \"matte\" as an\nanti-gloss instruction on glossy skin.\n\n---\n\n## Writing rules\n\n1. **Positive framing, never negation.** State the desired result, not the\n   failure to avoid. \"without clumping\" → \"as separate, well-defined strands\".\n   \"no waxy plastic skin\" → \"matte, lifelike skin with visible pores\".\n   \"not cloudy\" → \"clean and clear\". The one exception is block 8, where an\n   active \"suppress / clean up\" verb is fine.\n2. **Recovery verbs only.** Resolve, recover, preserve, sharpen, render,\n   hold, maintain. Never \"enhance\", \"improve\", \"make better\", \"fix\" — these\n   push the model off-source.\n3. **Name specifics, not adjectives.** \"Sharpen the rivets and plate seams\"\n   beats \"make the armour more detailed.\"\n4. **Describe lighting concretely** in block 7 — source, quality, direction,\n   temperature. \"Good lighting\" is not enough.\n5. **Soft-gradient elements are named twice** — once in block 6 to preserve\n   their shape, once in block 8 to clean up banding in those same gradients.\n6. **Specific detail helps, filler hurts.** Cut any clause that does not name\n   something concrete in this image. If you see drift, trimmable filler\n   usually lives in the environment and hair blocks.\n7. **Observed surface, not default.** Matte skin is the right default for\n   normal portrait light, but skin under macro, sweat, oil, or strong\n   directional light is genuinely glossy — use the sheen variant. The same\n   applies to every surface: describe what the image actually shows.\n8. **Length matches image complexity.** Tight build for simple subjects,\n   detailed build for genuinely multi-material images. Drift toward length\n   for its own sake hurts; specific detail per material helps.\n\n---\n\n## Painterly / illustration variant\n\nFor painted, illustrated, or concept-art sources, adjust three things:\n\n- **Block 1:** \"...while preserving its painterly, concept-art rendering and\n  brushwork...\"\n- **Block 2/skin:** drop \"pore-level\"; say \"clear, well-rendered facial\n  detail in keeping with the painted style.\"\n- **Block 10:** always use the Style tag — `Style: oil painting.` /\n  `Style: digital concept art.` — and name the style again in block 7.\n\n---\n\n## Fallback — deriving a preset on the fly\n\nWhen an image matches no existing mode cleanly, derive a preset rather than\nforce-fit. The derived preset still obeys the full skeleton — only the\nmiddle blocks (2, 4, 5) are improvised:\n\n1. Classify the focal structure — single hero, layered scene, abstract,\n   partial figure — and choose or combine modes accordingly.\n2. List the fragile materials present.\n3. Assign each a positive guard — reuse vocabulary-bank rows where they fit,\n   coin new ones in the same sub-features-plus-guard form where they don't.\n4. Assemble through blocks 0–10 as normal; all writing rules still bind.\n5. Treat any coined material as a candidate row for the vocabulary bank.\n\nBias toward deriving on ambiguous images — a forced-fit preset is worse than\na derived one. Only provide the prompt.\n\nExample: RFNTILE. refine and add detail to this upscaled tile. Image 1 is the tile to refine — resolve fine detail and crisp, clean edges across image 1 only, as a high-resolution delivery master of this portrait. Image 2 shows where this tile sits within the full frame; image 3 is the full source photo — draw on images 2 and 3 only for matching colour, lighting, and edge continuity, keeping all rendered content sourced from image 1. Render the skin with a realistic matte finish and lifelike, pore-level texture — keep visible pores, fine skin detail, and natural soft highlights, so the skin reads as real, textured, and matte. Resolve the eyes with sharp, lifelike clarity — crisp irises, clean catchlights, and individual eyelashes. Resolve the hair as fine, individual strands with soft, defined flyaways. On the polished steel armour, resolve the specular highlights, mirror reflections, surface scratches, rivets, hinges, and plate seams as crisp, well-defined detail, with reflections accurate and true to the source. On the feathered wings, resolve individual barbs and downy texture so each barb reads as a separate, cleanly defined strand. Hold the glowing halo as a smooth, even ring of light. Keep the background produce and shelving naturally detailed within the existing shallow depth of field, holding the soft bokeh as smooth, evenly filled discs. Maintain the warm, soft directional interior light and the existing colour grade, with the existing contrast, white balance, framing, and depth of field exactly as shown. Clean up degradation from the source: suppress compression artifacts, colour banding, and aliasing, and render smooth, even tonal gradients and clean, clear shadow detail. Keep the content, composition, framing, colours, and style identical to image 1 — change only resolution, sharpness, and fine detail."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
     },
     {
       "id": 1,
       "type": "LoadImage",
       "pos": [
         147.84078534964914,
-        201.70279898476667
+        201.7027989847665
       ],
       "size": [
         282.83333587646484,
         314
       ],
       "flags": {},
-      "order": 7,
+      "order": 14,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -938,149 +1338,6 @@
       ],
       "color": "#232",
       "bgcolor": "#353"
-    },
-    {
-      "id": 17,
-      "type": "CLIPTextEncode",
-      "pos": [
-        854.7287408519328,
-        624.8999182554855
-      ],
-      "size": [
-        457.2072473810904,
-        200
-      ],
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 25
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            15
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        "RFNTILE. refine and add detail to this upscaled tile. Restore the image quality and resolve it to a sharp, high-resolution result. Remove compression artifacts, banding, and noise, and clarify soft or blurred areas into crisp, clean edges and definition. Enrich existing textures and surfaces with fine, intricate, physically accurate detail, matching the existing grain, focus, and material properties of each surface. Keep in-focus areas crisp and sharp, keep softly blurred areas soft, and leave flat or evenly-toned areas clean and smooth. Recover detail only where detail is already present, and add no new objects, elements, or content — refine only what is already in the tile. Preserve the original lighting, colour, contrast, and composition exactly as shown. Produce a clean, photorealistic result faithful to the source."
-      ],
-      "color": "#232",
-      "bgcolor": "#353"
-    },
-    {
-      "id": 19,
-      "type": "LoraLoaderModelOnly",
-      "pos": [
-        539.9614702368422,
-        1064.1735593715318
-      ],
-      "size": [
-        270,
-        82
-      ],
-      "flags": {},
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 26
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            29
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoraLoaderModelOnly"
-      },
-      "widgets_values": [
-        "42lux_hildegard-refiner.safetensors",
-        1
-      ],
-      "color": "#232",
-      "bgcolor": "#353"
-    },
-    {
-      "id": 22,
-      "type": "Flux2KleinRefLatentWeight",
-      "pos": [
-        859.9614702368422,
-        914.1735593715314
-      ],
-      "size": [
-        210,
-        82
-      ],
-      "flags": {},
-      "order": 14,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 29
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            28
-          ]
-        }
-      ],
-      "title": "tile_latent (freedom)",
-      "properties": {
-        "Node name for S&R": "Flux2KleinRefLatentWeight"
-      },
-      "widgets_values": [
-        0,
-        0.9
-      ],
-      "color": "#232",
-      "bgcolor": "#353"
-    },
-    {
-      "id": 27,
-      "type": "Note",
-      "pos": [
-        154.78885997212623,
-        861.6445197289859
-      ],
-      "size": [
-        353.44370708475003,
-        336.28500155640256
-      ],
-      "flags": {},
-      "order": 8,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [],
-      "properties": {},
-      "widgets_values": [
-        "A basic workflow for the Hildegard Refiner.\n\nTile Sizes: 1024×1024 up to 2560×2560\n\ntile_latent (freedom): Controls how much creative latitude the model has to reinvent details. Values between 0.85–1.00 are the safe range.\n\nSteps: 4–12. Use higher values for greater refinement and sharpness on fine details. \n\nOtherwise the inference pipeline is your playground add a color anchor or even per tile prompting."
-      ],
-      "color": "#432",
-      "bgcolor": "#653"
     }
   ],
   "links": [
@@ -1157,14 +1414,6 @@
       "VAE"
     ],
     [
-      11,
-      20,
-      0,
-      7,
-      0,
-      "MODEL"
-    ],
-    [
       12,
       8,
       0,
@@ -1181,14 +1430,6 @@
       "CONDITIONING"
     ],
     [
-      14,
-      16,
-      3,
-      8,
-      1,
-      "LATENT"
-    ],
-    [
       15,
       17,
       0,
@@ -1197,28 +1438,12 @@
       "CONDITIONING"
     ],
     [
-      16,
-      16,
-      1,
-      9,
-      1,
-      "LATENT"
-    ],
-    [
       17,
       9,
       0,
       10,
       0,
       "CONDITIONING"
-    ],
-    [
-      18,
-      16,
-      2,
-      10,
-      1,
-      "LATENT"
     ],
     [
       19,
@@ -1347,16 +1572,72 @@
       26,
       1,
       "INT"
+    ],
+    [
+      35,
+      16,
+      2,
+      9,
+      1,
+      "LATENT"
+    ],
+    [
+      36,
+      16,
+      3,
+      10,
+      1,
+      "LATENT"
+    ],
+    [
+      37,
+      16,
+      4,
+      8,
+      1,
+      "LATENT"
+    ],
+    [
+      38,
+      20,
+      0,
+      28,
+      0,
+      "MODEL"
+    ],
+    [
+      39,
+      28,
+      0,
+      7,
+      0,
+      "MODEL"
+    ],
+    [
+      40,
+      16,
+      0,
+      29,
+      0,
+      "IMAGE"
+    ],
+    [
+      41,
+      16,
+      1,
+      29,
+      1,
+      "IMAGE"
     ]
   ],
   "groups": [],
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.7627768444385503,
+      "scale": 0.6934334949441344,
       "offset": [
-        495.0107076219233,
-        155.58886557846373
+        413.4585812760657,
+        164.42269489590734
       ]
     },
     "frontendVersion": "1.43.18"

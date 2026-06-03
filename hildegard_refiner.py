@@ -120,8 +120,8 @@ class Hildegard_Plan(io.ComfyNode):
             ),
             inputs=[
                 io.Image.Input("image"),
-                io.Int.Input("tile_width", default=1024, min=LATENT_ALIGN, max=8192, step=LATENT_ALIGN),
-                io.Int.Input("tile_height", default=1024, min=LATENT_ALIGN, max=8192, step=LATENT_ALIGN),
+                io.Int.Input("tile_width", default=1536, min=LATENT_ALIGN, max=8192, step=LATENT_ALIGN),
+                io.Int.Input("tile_height", default=1536, min=LATENT_ALIGN, max=8192, step=LATENT_ALIGN),
                 io.Combo.Input("min_overlap", options=list(OVERLAP_DICT.keys()), default="1/32 Tile"),
                 io.Float.Input("min_scale_factor", default=3.0, min=1.0, max=8.0, step=0.01),
                 io.Combo.Input("tile_order", options=list(TILE_ORDER_DICT.keys()), default="spiral"),
@@ -436,34 +436,31 @@ class Hildegard_References_Split(io.ComfyNode):
                             "longer edge fits this. 2048 is the Hildegard training "
                             "default."),
                 io.Float.Input(
-                    "tile_high_freq_reduce", default=0.50, min=0.0, max=1.0, step=0.05,
+                    "tile_high_freq_reduce", default=0.00, min=0.0, max=1.0, step=0.05,
                     tooltip="Attenuate the tile reference's high-frequency band "
                             "(micro-detail / edges / texture) before VAE-encoding. "
-                            "0 = full source detail preserved in the reference (tight "
-                            "fidelity, model has little room to add). 0.5 (default) = "
-                            "balanced: source's color and structure preserved, but "
-                            "model is free to synthesize fresh micro-detail. 1 = soft, "
-                            "low-contrast version with only broad shapes and color "
-                            "preserved.\n\n"
-                            "Only affects the tile_latent output. The TILE(S) image "
-                            "output, position_latent, and global_latent are untouched."),
+                            "0 = full source detail preserved in the reference "
+                            "(tight fidelity, model has little room to add). "
+                            "1 = soft, low-contrast version with only broad "
+                            "shapes and color preserved.\n\n"
+                            "Only affects the tile_latent output. The TILE(S) "
+                            "image output, position_latent, and global_latent "
+                            "are untouched."),
                 io.Float.Input(
-                    "low_freq_radius", default=15.0, min=1.0, max=256.0, step=1.0,
+                    "low_freq_radius", default=256.0, min=1.0, max=256.0, step=1.0,
                     tooltip="Gaussian-blur radius (px) defining the cutoff between "
                             "low and high frequencies for tile_high_freq_reduce. "
                             "Larger = more of the source's detail is classified as "
                             "'low frequency' and survives the reduce. Smaller = only "
                             "the very-broadest shapes survive; the model regenerates "
-                            "everything else. 15 (default) is a good baseline for "
-                            "refinement passes — keeps composition and color stable "
-                            "while opening up fine texture for the model."),
+                            "everything else."),
             ],
             outputs=[
                 io.Image.Output(display_name="TILE(S)", is_output_list=True),
+                io.Image.Output(display_name="POSITION(S)", is_output_list=True),
                 io.Latent.Output(display_name="tile_latent", is_output_list=True),
                 io.Latent.Output(display_name="position_latent", is_output_list=True),
                 io.Latent.Output(display_name="global_latent"),
-                io.Image.Output(display_name="POSITION(S)", is_output_list=True),
             ],
             hidden=[io.Hidden.unique_id],
         )
@@ -522,7 +519,7 @@ class Hildegard_References_Split(io.ComfyNode):
             position_latents.append({"samples": vae.encode(pos_tensor)})
 
         result_tiles = [t[0].unsqueeze(0) if t.shape[0] == 1 else t for t in tiles_out]
-        return io.NodeOutput(result_tiles, tile_latents, position_latents, global_latent, position_images)
+        return io.NodeOutput(result_tiles, position_images, tile_latents, position_latents, global_latent)
 
 
 class HildegardExtension(ComfyExtension):
