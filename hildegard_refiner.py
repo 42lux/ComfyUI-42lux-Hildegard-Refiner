@@ -259,6 +259,18 @@ class Hildegard_Combine(io.ComfyNode):
         tile_order = dac_data["tile_order"]
 
         tile_height, tile_width = images.shape[1], images.shape[2]
+        # Tiles must keep the size the plan cut them at; otherwise the plan-derived
+        # coordinates no longer line up with the output buffer and the compositing
+        # below fails with a cryptic broadcast error. Fail early with a clear message.
+        if (tile_height, tile_width) != (dac_data["tile_height"], dac_data["tile_width"]):
+            raise ValueError(
+                f"Combine received {tile_width}x{tile_height} tiles but the plan cut "
+                f"{dac_data['tile_width']}x{dac_data['tile_height']}. Each processed tile "
+                f"must keep the size the plan cut it at; this mismatch means the latents "
+                f"reached Combine at a different resolution than the plan. Make sure "
+                f"EmptyLatentImage (and any upscale/resize between Plan and Combine) uses "
+                f"the plan's tile_width/tile_height."
+            )
         f_overlap_x = overlap_x // 4
         f_overlap_y = overlap_y // 4
         blend_x = math.sqrt(overlap_x)
